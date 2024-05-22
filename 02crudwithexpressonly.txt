@@ -1,0 +1,78 @@
+import express from 'express';
+
+const app = express();
+const port = 8080;
+app.use(express.json());
+
+let pens = [];
+let newid = 1;
+
+
+app.get('/', (req, res) => {
+    res.send("get call with root directory");
+});
+
+
+app.get('/login', (req, res) => {
+    res.send('login call with get method');
+});
+
+app.get('/twitter', (req, res) => {
+    res.status(200).send("twitter call with get method");
+})
+
+// add pen
+app.post('/pens', (req, res) => {
+    console.log(req.body);
+    const { name, price } = req.body;
+    const newpen = { id: newid++, name, price };
+    pens.push(newpen);
+
+    res.status(200).send(newpen);
+
+});
+// get all pens
+app.get('/pens', (req, res) => {
+    res.status(200).send(pens);
+})
+// get specifi pen 
+app.get('/pens/:id', (req, res) => {
+    console.log('Specific id');
+    const pen = pens.find((t) => t.id === parseInt(req.params.id));
+    console.log(req.params.id, "ID", pen)
+    if (!pen) {
+        res.status(400).send("pen not found");
+    }
+    res.status(200).send(pen);
+})
+
+app.put('/pens/:id', (req, res) => {
+    const pen = pens.find((t) => t.id === parseInt(req.params.id));
+
+    if (!pen) {
+        res.status(400).send("pen not found");
+    }
+    const { name, price } = req.body
+    pen.name = name;
+    pen.price = price;
+    res.send(200).send(pen);
+
+});
+
+app.delete('/pens/:id', (req, res) => {
+    console.log("delete")
+    console.log(req.params.id)
+    const index = pens.findIndex(t => t.id === parseInt(req.params.id))
+    if (index === -1) {
+        return res.status(404).send('pen not found')
+    }
+    pens.splice(index, 1)
+    res.status(200).json({
+        status: "true"
+    })
+})
+
+
+app.listen(port, () => {
+    console.log(`app is listing on port ${port}`);
+});
