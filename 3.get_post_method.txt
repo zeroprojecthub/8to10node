@@ -1,0 +1,62 @@
+bend:index.js
+
+import express from 'express';
+import nodemon from 'nodemon';
+const app = express();
+const port = 3000;
+
+//data send from form(front-end) that will need to encode
+
+app.use(express.urlencoded({extended:true}))
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+})
+
+app.get('/register',(req,res)=>{
+    const {username,password} = req.query
+    console.log(req.query);
+    res.send(`Wel come ${username}`);
+})
+
+app.post('/register',(req,res)=>{
+    const {username,password} = req.body;
+    console.log(req.body);
+    res.send(`WEl COME ${username}`);
+
+})
+
+app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+})
+
+
+
+fend:index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>GET Method</h1>
+    <form action="http://localhost:3000/register" method="get">
+        <input type="text" placeholder="Enter Here" name="username">
+        <input type="password" placeholder="Enter Password" name="password">
+        <button type="submit">SUBMIT</button>
+    </form>
+
+
+    <h1>POST Method</h1>
+    <form action="http://localhost:3000/register" method="post">
+        <input type="text" placeholder="Enter Here" name="username">
+        <input type="password" placeholder="Enter Password" name="password">
+        <button type="submit">SUBMIT</button>
+    </form>
+
+
+</body>
+</html>
